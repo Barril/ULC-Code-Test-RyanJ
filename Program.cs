@@ -12,6 +12,9 @@ namespace ChipSecuritySystem
     {
         public const string ArgumentErrorMessage = "Invalid arguments!  Argument must be a path to a text file containing the contents of the chip bag";
 
+        /// <summary>
+        /// A regex that looks for color chips in the form of [StartColorName,EndColorName] and captures the color names.
+        /// </summary>
         private const string InputFileRegex = @"\[(?<"+ InputFileStartColorKey + @">\w+)[\s,]+?(?<" + InputFileEndColorKey + @">\w+)\]";
         private const string InputFileStartColorKey = "StartColor";
         private const string InputFileEndColorKey = "EndColor";
