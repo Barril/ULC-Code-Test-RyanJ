@@ -1,0 +1,8 @@
+﻿[Blue, Yellow]
+[Blue, Yellow]
+[Red, Green]
+[Red, Blue]
+[Blue, Blue]
+[Yellow, Red]
+[Yellow, Red]
+[Orange, Purple]
