@@ -11,6 +11,15 @@ namespace ChipSecuritySystem
         public const Color SequenceStartColor = Color.Blue;
         public const Color SequenceEndColor = Color.Green;
 
+        private bool mReversableChips;
+        private ColorChipEqualityComparer mColorChipEqualityComparer;
+
+        public SequenceValidator(bool reversableChips = false)
+        {
+            mReversableChips = reversableChips;
+            mColorChipEqualityComparer = new ColorChipEqualityComparer();
+        }
+
         /// <summary>
         /// Tries to get the unlock sequence for a specified bag.
         /// </summary>
@@ -37,11 +46,24 @@ namespace ChipSecuritySystem
                 return newSequence;
             }
 
-            IEnumerable<ColorChip> validChips = chipBag.GroupBy(c => c).Select(g => g.Key).Where(c => c.StartColor == previousColor);
+            IEnumerable<ColorChip> validChips = chipBag
+                .Where(c => c.StartColor == previousColor);
+
+            // If we support chips reversing, add all the missed valid chips, reversing them as we go.
+            if (mReversableChips)
+            {
+                // Make sure to strip mono-color chips so we don't double-add them.
+                var missingChips = chipBag
+                                        .Where(c => c.StartColor != c.EndColor && c.EndColor == previousColor)
+                                        .Select(c => new ColorChip(c.EndColor, c.StartColor));
+                validChips = validChips.Concat(missingChips);
+            }
             if (!validChips.Any())
             {
                 return newSequence;
             }
+
+            validChips = validChips.Distinct(mColorChipEqualityComparer);
 
             // Loop through each valid chip and recurse to get the longest valid sequence. 
             foreach (ColorChip chip in validChips)

@@ -37,7 +37,7 @@ namespace ChipSecuritySystem
                 return;
             }
 
-            SequenceValidator validator = new SequenceValidator();
+            SequenceValidator validator = new SequenceValidator(reversableChips: true);
             if (validator.TryGetUnlockSequence(chipBag, out List<ColorChip> unlockSequence))
             {
                 Console.WriteLine(ValidatorConstants.SuccessMessage);
